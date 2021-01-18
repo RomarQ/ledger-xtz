@@ -1,6 +1,6 @@
 {
 	"name": "ledger-xtz",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Ledger Hardware Wallet Tezos Application API",
 	"main": "dist/ledger-xtz.js",
 	"module": "dist/ledger-xtz.es.js",
@@ -8,7 +8,8 @@
 	"repository": "https://github.com/RoMarQ/ledger-xtz",
 	"license": "MIT",
 	"files": [
-		"dist/lib"
+		"dist/lib",
+		"dist/types"
 	],
 	"types": "dist/types",
 	"scripts": {
