@@ -2,8 +2,6 @@ import BIPPath from 'bip32-path';
 import { Curves, encodeToBase58, encodeSignature, getOperationHash } from './utils';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 
-import { Buffer } from 'buffer';
-
 const LEDGER_DEBUG = false;
 
 /**
@@ -42,7 +40,7 @@ export default class LedgerXTZ {
    */
   async getAddress(
     path: string,
-    display?: boolean,
+    display: boolean = true,
     curve: number = Curves.ED25519
   ): Promise<AddressResponse> {
     /**
@@ -104,7 +102,7 @@ export default class LedgerXTZ {
     curve: number = Curves.ED25519
   ): Promise<any> {
     const bipPath = BIPPath.fromString(path).toPathArray();
-    const rawOp = Buffer.concat([Buffer.of(0x03), Buffer.from(rawOpHex, 'hex')]);
+    const rawOp = Buffer.concat([Buffer.from([0x03]), Buffer.from(rawOpHex, 'hex')]);
 
     const apdus: APDU[] = [];
     let offset = 0;
@@ -145,7 +143,7 @@ export default class LedgerXTZ {
       response = await this.transport.send(apdu.cla, apdu.ins, apdu.p1, apdu.p2, apdu.data);
     }
 
-    let signature;
+    let signature: Buffer;
     if (curve == Curves.ED25519) {
       // ed25519 signature is already formatted.
       signature = response.slice(0, response.length - 2);
@@ -201,9 +199,10 @@ export default class LedgerXTZ {
       }
     }
 
+    const hexSignature = signature.toString('hex');
     return {
-      signature: Buffer.from(signature.toString('hex'), 'hex'),
-      encodedSignature: encodeSignature(signature.toString('hex'), curve),
+      signature: hexSignature,
+      encodedSignature: encodeSignature(hexSignature, curve),
       blake2bHash: getOperationHash(rawOpHex)
     };
   }

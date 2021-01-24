@@ -31,7 +31,7 @@ export default {
   ],
   plugins: [
     terser(),
-    resolve(),
+    resolve({ browser: true }),
     commonjs(),
     json(),
     polyfills(),
