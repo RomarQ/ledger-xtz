@@ -1,6 +1,7 @@
 import blake from 'blakejs';
 import bs58check from 'bs58check';
 import bs58 from 'bs58';
+import { Buffer } from 'buffer';
 
 export const Curves = {
 	ED25519: 0x00,
@@ -36,8 +37,10 @@ const b58encode = (payload: Uint8Array, prefix: Uint8Array): string => {
 	return bs58check.encode(buffer);
 };
 
-const hexToBuffer = (hex: string) =>
-	Buffer.from(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16)));
+const hexToBuffer = (hex: string) =>  {
+	const arrOfHex = (hex.match(/[\da-f]{2}/gi)|| []).map(h => parseInt(h, 16));
+	return Buffer.from(arrOfHex);
+}
 
 const compressPublicKey = (publicKey: Uint8Array, curve: number) =>
 	curve === Curves.ED25519

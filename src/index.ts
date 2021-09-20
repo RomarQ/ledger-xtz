@@ -1,8 +1,18 @@
 import BIPPath from 'bip32-path';
 import { Curves, encodeToBase58, encodeSignature, getOperationHash } from './utils';
-import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import TransportWeb from "@ledgerhq/hw-transport-webhid";
+import { Buffer } from 'buffer';
+import { listen } from "@ledgerhq/logs";
 
 const LEDGER_DEBUG = false;
+if (LEDGER_DEBUG) {
+  listen(({ id, date, type, message, ...rest }) => {
+    console.debug({
+      message: type + (message ? ": " + message : ""),
+      ...rest,
+    });
+  });
+}
 
 /**
  * Tezos API
@@ -11,7 +21,7 @@ export default class LedgerXTZ {
   transport: any = undefined;
 
   constructor() {
-    TransportU2F.create()
+    TransportWeb.create()
       .then((transport) => {
         this.transport = transport;
         this.transport.decorateAppAPIMethods(
